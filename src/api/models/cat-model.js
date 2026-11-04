@@ -1,26 +1,60 @@
-export const cats = [
+const catItems = [
     {
-        cat_id: 0,
-        name: 'Nynya',
-        birthdate: "2018-11-13",
-        weight: 5.2,
-        owner: 'Ellina',
-        image: 'https://placecats.com/320/240'
+        cat_id: 9592,
+        cat_name: 'Frank',
+        weight: 11,
+        owner: 3609,
+        filename: 'f3dbafakjsdfhg4',
+        birthdate: '2021-10-12',
     },
     {
-        cat_id: 1,
-        name: 'Kisu',
-        birthdate: "2024-03-29",
-        weight: 3.2,
-        owner: 'Juha',
-        image: 'https://placecats.com/320/240'
+        cat_id: 9590,
+        cat_name: 'Mittens',
+        weight: 8,
+        owner: 3602,
+        filename: 'f3dasdfkjsdfhgasdf',
+        birthdate: '2021-10-12',
     },
-    {
-        cat_id: 2,
-        name: 'Misu',
-        birthdate: "2026-09-20",
-        weight: 1.9,
-        owner: 'John',
-        image: 'https://placecats.com/320/240'
-    }
-]
+];
+
+const listAllCats = () => {
+    return catItems;
+};
+
+const findCatById = (id) => {
+    return catItems.find((item) => item.cat_id == id);
+};
+
+const addCat = (cat) => {
+    const { cat_name, weight, owner, filename, birthdate } = cat;
+    const newId = catItems[0].cat_id + 1;
+    catItems.unshift({
+        cat_id: newId,
+        cat_name,
+        weight,
+        owner,
+        filename,
+        birthdate,
+    });
+    return { cat_id: newId };
+};
+
+const updateCat = (id, cat) => {
+    const existingCat = findCatById(id);
+    if (!existingCat) return undefined;
+
+    const { cat_name, weight, owner, filename, birthdate } = cat;
+    Object.assign(existingCat, { cat_name, weight, owner, filename, birthdate});
+
+    return existingCat;
+}
+
+const removeCat = (id) => {
+    const existingCat = findCatById(id);
+    if (!existingCat) return undefined;
+
+    const index = catItems.indexOf(existingCat);
+    return catItems.splice(index, 1)[0];
+}
+
+export { listAllCats, findCatById, addCat, updateCat, removeCat };

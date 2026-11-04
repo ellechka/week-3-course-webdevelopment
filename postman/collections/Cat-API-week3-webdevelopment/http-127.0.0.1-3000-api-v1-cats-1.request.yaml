@@ -1,0 +1,9 @@
+$kind: http-request
+name: http://127.0.0.1:3000/api/v1/cats
+description: ""
+url: http://127.0.0.1:3000/api/v1/cats/9590
+method: DELETE
+body:
+  type: json
+  content: ""
+order: 2000

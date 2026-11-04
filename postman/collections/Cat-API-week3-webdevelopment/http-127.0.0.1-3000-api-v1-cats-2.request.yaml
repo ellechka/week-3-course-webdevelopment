@@ -1,0 +1,21 @@
+$kind: http-request
+name: http://127.0.0.1:3000/api/v1/cats
+description: ""
+url: http://127.0.0.1:3000/api/v1/users/3609
+method: PUT
+body:
+  type: json
+  content: "    {\r
+
+    \        \"name\": \"Ellina Kiriliuk\",\r
+
+    \        \"username\": \"ellinakiriliuk\",\r
+
+    \        \"email\": \"ellina@metropolia.fi\",\r
+
+    \        \"role\": \"user\",\r
+
+    \        \"password\": \"password3\"\r
+
+    \    }"
+order: 3000

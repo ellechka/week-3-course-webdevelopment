@@ -1,10 +1,12 @@
-import express from 'express';
-import { cats } from '../models/cat-model.js';
+import { Router } from 'express';
+import { getCat, postCat, putCat, deleteCat, getCatById } from "../controllers/cat-controller.js";
 
-const router = express.Router();
+const router = Router();
 
-router.get('/', (req, res) => {
-   res.json(cats);
-});
+router.get('/', getCat);
+router.get('/:id', getCatById);
+router.post('/', postCat);
+router.put('/:id', putCat);
+router.delete('/:id', deleteCat);
 
 export default router;

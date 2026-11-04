@@ -37,3 +37,5 @@ npm run dev
 
 4. Open API in Chrome-browser: `http://localhost:3000/api/v1/cats`
 Files from directory `public` is available by `http://localhost:3000/public/<file_name>`.
+
+All checks for http-requests can be found: `../public/results/result<what kind of>`.

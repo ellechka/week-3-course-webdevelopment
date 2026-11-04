@@ -1,0 +1,6 @@
+$kind: http-request
+name: http://127.0.0.1:3000/api/v1/cats
+description: ""
+url: http://127.0.0.1:3000/api/v1/cats/9592
+method: GET
+order: 1000
