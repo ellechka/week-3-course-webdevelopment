@@ -1,0 +1,35 @@
+$kind: http-request
+name: http://127.0.0.1:3000/api/v1/cats
+description: ""
+url: http://127.0.0.1:3000/api/v1/cats
+method: POST
+body:
+  type: formdata
+  content:
+    - type: text
+      key: cat_name
+      value: Nynya2
+      description: ""
+      disabled: false
+    - type: text
+      key: weight
+      value: "5.3"
+      description: ""
+      disabled: false
+    - type: text
+      key: owner
+      value: "2784"
+      description: ""
+      disabled: false
+    - type: file
+      key: cat
+      src:
+        - postman-cloud:///1f1d90b1-c3ee-4e70-93d1-18a8de475e30
+      description: ""
+      disabled: false
+    - type: text
+      key: birthdate
+      value: 2020-12-20
+      description: ""
+      disabled: false
+order: 2000
