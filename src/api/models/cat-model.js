@@ -28,28 +28,52 @@ const addCat = async (cat) => {
     return result.affectedRows === 0 ? false : {cat_id: result.insertId};
 };
 
-const modifyCat = async (cat, id) => {
+const modifyCat = async (cat, id, user) => {
     const {cat_name, weight, owner, filename, birthdate} = cat;
-    const [result] = await promisePool.execute(
-        `UPDATE wsk_cats
-         SET cat_name = ?, weight = ?, owner = ?, filename = ?, birthdate = ?
-         WHERE cat_id = ?`,
-        [cat_name, weight, owner, filename, birthdate, id],
-    );
+    let result;
 
-    if (result.affectedRows === 0) {
-        const existingCat = await findCatById(id);
-        if (!existingCat) return false;
+    if (user.role === 'admin') {
+        [result] = await promisePool.execute(
+            `UPDATE wsk_cats
+             SET cat_name = ?, weight = ?, owner = ?, filename = ?, birthdate = ?
+             WHERE cat_id = ?`,
+            [cat_name, weight, owner, filename, birthdate, id],
+        );
+
+        if (result.affectedRows === 0) {
+            const existingCat = await findCatById(id);
+            if (!existingCat) return false;
+        }
+    } else {
+        [result] = await promisePool.execute(
+            `UPDATE wsk_cats
+             SET cat_name = ?, weight = ?, filename = ?, birthdate = ?
+             WHERE cat_id = ? AND owner = ?`,
+            [cat_name, weight, filename, birthdate, id, user.user_id],
+        );
+
+        if (result.affectedRows === 0) {
+            const [rows] = await promisePool.execute(
+                'SELECT cat_id FROM wsk_cats WHERE cat_id = ? AND owner = ?',
+                [id, user.user_id],
+            );
+            if (rows.length === 0) return false;
+        }
     }
 
     return {message: 'success'};
 };
 
-const removeCat = async (id) => {
-    const [result] = await promisePool.execute(
-        'DELETE FROM wsk_cats WHERE cat_id = ?',
-        [id],
-    );
+const removeCat = async (id, user) => {
+    const [result] = user.role === 'admin'
+        ? await promisePool.execute(
+            'DELETE FROM wsk_cats WHERE cat_id = ?',
+            [id],
+        )
+        : await promisePool.execute(
+            'DELETE FROM wsk_cats WHERE cat_id = ? AND owner = ?',
+            [id, user.user_id],
+        );
 
     return result.affectedRows === 0 ? false : {message: 'success'};
 };
