@@ -1,41 +1,43 @@
-import {addCat, findCatById, listAllCats, updateCat, removeCat } from '../models/cat-model.js';
+import {addCat, findCatById, listAllCats, listCatsByUserId, modifyCat, removeCat } from '../models/cat-model.js';
 
-const getCat = (req, res) => {
-    res.json(listAllCats());
+const getCat = async (req, res) => {
+    res.json(await listAllCats());
 };
 
-const getCatById = (req, res) => {
-    const cat = findCatById(req.params.id);
-    if (cat) {
-        res.json(cat);
-    } else {
-        res.sendStatus(404);
-    }
+const getCatsByUserId = async (req, res) => {
+  res.json(await listCatsByUserId(req.params.userId));
 };
 
-const postCat = (req, res) => {
-    console.log('Form data: ', req.body);
-    console.log('Uploaded file', req.file);
+const getCatById = async (req, res) => {
+    const cat = await findCatById(req.params.id);
+    if (!cat) return res.sendStatus(404);
 
-    const result = addCat({
+    res.json(cat);
+};
+
+const postCat = async (req, res) => {
+    const result = await addCat({
         ...req.body,
         filename: req.file?.filename,
     });
 
-    if (result.cat_id) {
-        res.status(201);
-        res.json({ message: 'New cat added.', result });
-    } else {
-        res.sendStatus(400);
-    }
+    if (!result) return res.sendStatus(400);
+
+    res.status(201).json({message: 'New cat added.', result});
 };
 
-const putCat = (req, res) => {
-    res.json({ message: 'Cat item updated.' });
+const putCat = async (req, res) => {
+    const result = await modifyCat(req.body, req.params.id);
+    if (!result) return res.sendStatus(404);
+
+    res.json({message: 'Cat item updated.'});
 };
 
-const deleteCat = (req, res) => {
-    res.json({ message: 'Cat item deleted.' });
+const deleteCat = async (req, res) => {
+    const result = await removeCat(req.params.id);
+    if (!result) return res.sendStatus(404);
+
+    res.json({message: 'Cat item deleted.'});
 };
 
-export { getCat, getCatById, postCat, putCat, deleteCat };
+export { getCat, getCatsByUserId ,getCatById, postCat, putCat, deleteCat };
