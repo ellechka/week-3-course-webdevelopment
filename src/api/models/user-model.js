@@ -25,16 +25,24 @@ const addUser = async (user) => {
 };
 
 const modifyUser = async (user, id) => {
-    const {name, username, email, password, role = 'user'} = user;
+    const allowedFields = ['name', 'username', 'email', 'role', 'password'];
+    const fields = allowedFields.filter((field) => user[field] !== undefined);
+
+    if (fields.length === 0) return false;
+
+    const assignments = fields.map((field) => `${field} = ?`).join(', ');
+    const values = fields.map((field) => user[field]);
+
     const [result] = await promisePool.execute(
-        'UPDATE wsk_users SET name = ?, username = ?, email = ?, password = ?, role = ? WHERE user_id = ?',
-        [name, username, email, password, role, id],
+        `UPDATE wsk_users SET ${assignments} WHERE user_id = ?`,
+        [...values, id],
     );
 
     if (result.affectedRows === 0) {
         const existingUser = await findUserById(id);
         if (!existingUser) return false;
     }
+
     return {message: 'success'};
 };
 
@@ -69,5 +77,12 @@ const removeUser = async (id) => {
     }
 }
 
+const findUserByUsername = async (username) => {
+  const [rows] = await promisePool.execute(
+      `SELECT * FROM wsk_users WHERE username = ?`,
+      [username],
+  );
+  return rows[0] ?? false;
+};
 
-export { listAllUsers, findUserById, addUser, modifyUser, removeUser };
+export { listAllUsers, findUserById, addUser, modifyUser, removeUser, findUserByUsername };
